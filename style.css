@@ -1,0 +1,76 @@
+:root{
+  --bg:#0f1115; --card:#151924; --text:#e9eef6; --muted:#98a2b3;
+  --line:#263042; --btn:#1f6feb; --btn2:#2b3346;
+}
+*{ box-sizing:border-box; }
+body{
+  margin:0; font-family:system-ui,Segoe UI,Roboto,Arial;
+  background:var(--bg); color:var(--text);
+}
+.wrap{ max-width:920px; margin:24px auto; padding:0 16px; }
+.top h1{ margin:0; font-size:22px; }
+.sub{ color:var(--muted); margin-top:4px; font-size:13px; }
+
+.tabs{ display:flex; gap:8px; margin:16px 0; }
+.tab{
+  background:var(--btn2); border:1px solid var(--line); color:var(--text);
+  padding:10px 12px; border-radius:10px; cursor:pointer;
+}
+.tab.active{ background:var(--card); border-color:#3b82f6; }
+
+.panel{
+  display:none; background:var(--card); border:1px solid var(--line);
+  border-radius:14px; padding:16px;
+}
+.panel.active{ display:block; }
+
+.grid{
+  display:grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
+  gap:12px;
+}
+.grid .span2{ grid-column: span 2; }
+
+label{ display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--muted); }
+select,input{
+  padding:10px; border-radius:10px;
+  border:1px solid var(--line);
+  background:#0b0d12; color:var(--text);
+}
+.row{ display:flex; gap:10px; margin:14px 0; }
+button{
+  padding:10px 12px; border-radius:10px;
+  border:1px solid var(--line);
+  background:var(--btn2); color:var(--text); cursor:pointer;
+}
+button.primary{ background:var(--btn); border-color:#1f6feb; }
+button:disabled{ opacity:.5; cursor:not-allowed; }
+
+textarea{
+  width:100%; padding:12px; border-radius:12px;
+  border:1px solid var(--line);
+  background:#0b0d12; color:var(--text);
+  resize:vertical;
+}
+
+.two{
+  display:grid; grid-template-columns: 1fr 1fr; gap:12px;
+  margin-top:10px;
+}
+.card{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  background:#101420;
+}
+.card h3{ margin:0 0 10px 0; font-size:14px; color:var(--text); }
+
+.rules{ margin-top:10px; color:var(--muted); }
+.rules summary{ cursor:pointer; margin-bottom:8px; }
+.foot{ margin-top:12px; color:var(--muted); font-size:13px; }
+
+@media (max-width: 800px){
+  .grid{ grid-template-columns: 1fr 1fr; }
+  .grid .span2{ grid-column: span 2; }
+  .two{ grid-template-columns: 1fr; }
+}

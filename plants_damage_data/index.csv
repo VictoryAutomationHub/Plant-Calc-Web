@@ -1,0 +1,154 @@
+plant,label,multiplier,file,kg_min,kg_max,kg_count
+Cactus,(1x),1.0,Cactus__1x.csv,1.0,30,291
+Cactus,(2x) Gold/Foggy/Electrified/Scorched,2.0,Cactus__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Cactus,(3x) Diamond,3.0,Cactus__3x_Diamond.csv,1.0,30,291
+Cactus,(4x) Ruby/Frozen,4.0,Cactus__4x_Ruby_Frozen.csv,1.0,30,291
+Cactus,(5x) Neon,5.0,Cactus__5x_Neon.csv,1.0,30,291
+Cactus,3.15x Fusion Mutation,3.15,Cactus__3.15x_Fusion_Mutation.csv,1.0,30,291
+Cactus,4.25x Fusion Mutation,4.25,Cactus__4.25x_Fusion_Mutation.csv,1.0,30,291
+Cactus,5.25x Fusion Mutation,5.25,Cactus__5.25x_Fusion_Mutation.csv,1.0,30,291
+Cactus,6.25x Fusion Mutation,6.25,Cactus__6.25x_Fusion_Mutation.csv,1.0,30,291
+Strawberry,(1x),1.0,Strawberry__1x.csv,1.0,30,291
+Strawberry,(2x) Gold/Foggy/Electrified/Scorched,2.0,Strawberry__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Strawberry,(3x) Diamond,3.0,Strawberry__3x_Diamond.csv,1.0,30,291
+Strawberry,(4x) Ruby/Frozen,4.0,Strawberry__4x_Ruby_Frozen.csv,1.0,30,291
+Strawberry,(5x) Neon,5.0,Strawberry__5x_Neon.csv,1.0,30,291
+Strawberry,3.15x Fusion Mutation,3.15,Strawberry__3.15x_Fusion_Mutation.csv,1.0,30,291
+Strawberry,4.25x Fusion Mutation,4.25,Strawberry__4.25x_Fusion_Mutation.csv,1.0,30,291
+Strawberry,5.25x Fusion Mutation,5.25,Strawberry__5.25x_Fusion_Mutation.csv,1.0,30,291
+Strawberry,6.25x Fusion Mutation,6.25,Strawberry__6.25x_Fusion_Mutation.csv,1.0,30,291
+Pumpkin,(1x),1.0,Pumpkin__1x.csv,1.0,30,291
+Pumpkin,(2x) Gold/Foggy/Electrified/Scorched,2.0,Pumpkin__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Pumpkin,(3x) Diamond,3.0,Pumpkin__3x_Diamond.csv,1.0,30,291
+Pumpkin,(4x) Ruby/Frozen,4.0,Pumpkin__4x_Ruby_Frozen.csv,1.0,30,291
+Pumpkin,(5x) Neon,5.0,Pumpkin__5x_Neon.csv,1.0,30,291
+Pumpkin,3.15x Fusion Mutation,3.15,Pumpkin__3.15x_Fusion_Mutation.csv,1.0,30,291
+Pumpkin,4.25x Fusion Mutation,4.25,Pumpkin__4.25x_Fusion_Mutation.csv,1.0,30,291
+Pumpkin,5.25x Fusion Mutation,5.25,Pumpkin__5.25x_Fusion_Mutation.csv,1.0,30,291
+Pumpkin,6.25x Fusion Mutation,6.25,Pumpkin__6.25x_Fusion_Mutation.csv,1.0,30,291
+Sunflower,(1x),1.0,Sunflower__1x.csv,1.0,30,291
+Sunflower,(2x) Gold/Foggy/Electrified/Scorched,2.0,Sunflower__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Sunflower,(3x) Diamond,3.0,Sunflower__3x_Diamond.csv,1.0,30,291
+Sunflower,(4x) Ruby/Frozen,4.0,Sunflower__4x_Ruby_Frozen.csv,1.0,30,291
+Sunflower,(5x) Neon,5.0,Sunflower__5x_Neon.csv,1.0,30,291
+Sunflower,3.15x Fusion Mutation,3.15,Sunflower__3.15x_Fusion_Mutation.csv,1.0,30,291
+Sunflower,4.25x Fusion Mutation,4.25,Sunflower__4.25x_Fusion_Mutation.csv,1.0,30,291
+Sunflower,5.25x Fusion Mutation,5.25,Sunflower__5.25x_Fusion_Mutation.csv,1.0,30,291
+Sunflower,6.25x Fusion Mutation,6.25,Sunflower__6.25x_Fusion_Mutation.csv,1.0,30,291
+Dragonfruit,(1x),1.0,Dragonfruit__1x.csv,1.0,30,291
+Dragonfruit,(2x) Gold/Foggy/Electrified/Scorched,2.0,Dragonfruit__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Dragonfruit,(3x) Diamond,3.0,Dragonfruit__3x_Diamond.csv,1.0,30,291
+Dragonfruit,(4x) Ruby/Frozen,4.0,Dragonfruit__4x_Ruby_Frozen.csv,1.0,30,291
+Dragonfruit,(5x) Neon,5.0,Dragonfruit__5x_Neon.csv,1.0,30,291
+Dragonfruit,3.15x Fusion Mutation,3.15,Dragonfruit__3.15x_Fusion_Mutation.csv,1.0,30,291
+Dragonfruit,4.25x Fusion Mutation,4.25,Dragonfruit__4.25x_Fusion_Mutation.csv,1.0,30,291
+Dragonfruit,5.25x Fusion Mutation,5.25,Dragonfruit__5.25x_Fusion_Mutation.csv,1.0,30,291
+Dragonfruit,6.25x Fusion Mutation,6.25,Dragonfruit__6.25x_Fusion_Mutation.csv,1.0,30,291
+Eggplant,(1x),1.0,Eggplant__1x.csv,1.0,30,291
+Eggplant,(2x) Gold/Foggy/Electrified/Scorched,2.0,Eggplant__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Eggplant,(3x) Diamond,3.0,Eggplant__3x_Diamond.csv,1.0,30,291
+Eggplant,(4x) Ruby/Frozen,4.0,Eggplant__4x_Ruby_Frozen.csv,1.0,30,291
+Eggplant,(5x) Neon,5.0,Eggplant__5x_Neon.csv,1.0,30,291
+Eggplant,3.15x Fusion Mutation,3.15,Eggplant__3.15x_Fusion_Mutation.csv,1.0,30,291
+Eggplant,4.25x Fusion Mutation,4.25,Eggplant__4.25x_Fusion_Mutation.csv,1.0,30,291
+Eggplant,5.25x Fusion Mutation,5.25,Eggplant__5.25x_Fusion_Mutation.csv,1.0,30,291
+Eggplant,6.25x Fusion Mutation,6.25,Eggplant__6.25x_Fusion_Mutation.csv,1.0,30,291
+Watermelon,(1x),1.0,Watermelon__1x.csv,1.0,30,291
+Watermelon,(2x) Gold/Foggy/Electrified/Scorched,2.0,Watermelon__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Watermelon,(3x) Diamond,3.0,Watermelon__3x_Diamond.csv,1.0,30,291
+Watermelon,(4x) Ruby/Frozen,4.0,Watermelon__4x_Ruby_Frozen.csv,1.0,30,291
+Watermelon,(5x) Neon,5.0,Watermelon__5x_Neon.csv,1.0,30,291
+Watermelon,3.15x Fusion Mutation,3.15,Watermelon__3.15x_Fusion_Mutation.csv,1.0,30,291
+Watermelon,4.25x Fusion Mutation,4.25,Watermelon__4.25x_Fusion_Mutation.csv,1.0,30,291
+Watermelon,5.25x Fusion Mutation,5.25,Watermelon__5.25x_Fusion_Mutation.csv,1.0,30,291
+Watermelon,6.25x Fusion Mutation,6.25,Watermelon__6.25x_Fusion_Mutation.csv,1.0,30,291
+Grape,(1x),1.0,Grape__1x.csv,1.0,30,291
+Grape,(2x) Gold/Foggy/Electrified/Scorched,2.0,Grape__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Grape,(3x) Diamond,3.0,Grape__3x_Diamond.csv,1.0,30,291
+Grape,(4x) Ruby/Frozen,4.0,Grape__4x_Ruby_Frozen.csv,1.0,30,291
+Grape,(5x) Neon,5.0,Grape__5x_Neon.csv,1.0,30,291
+Grape,3.15x Fusion Mutation,3.15,Grape__3.15x_Fusion_Mutation.csv,1.0,30,291
+Grape,4.25x Fusion Mutation,4.25,Grape__4.25x_Fusion_Mutation.csv,1.0,30,291
+Grape,5.25x Fusion Mutation,5.25,Grape__5.25x_Fusion_Mutation.csv,1.0,30,291
+Grape,6.25x Fusion Mutation,6.25,Grape__6.25x_Fusion_Mutation.csv,1.0,30,291
+Cocotank,(1x),1.0,Cocotank__1x.csv,1.0,30,291
+Cocotank,(2x) Gold/Foggy/Electrified/Scorched,2.0,Cocotank__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Cocotank,(3x) Diamond,3.0,Cocotank__3x_Diamond.csv,1.0,30,291
+Cocotank,(4x) Ruby/Frozen,4.0,Cocotank__4x_Ruby_Frozen.csv,1.0,30,291
+Cocotank,(5x) Neon,5.0,Cocotank__5x_Neon.csv,1.0,30,291
+Cocotank,3.15x Fusion Mutation,3.15,Cocotank__3.15x_Fusion_Mutation.csv,1.0,30,291
+Cocotank,4.25x Fusion Mutation,4.25,Cocotank__4.25x_Fusion_Mutation.csv,1.0,30,291
+Cocotank,5.25x Fusion Mutation,5.25,Cocotank__5.25x_Fusion_Mutation.csv,1.0,30,291
+Cocotank,6.25x Fusion Mutation,6.25,Cocotank__6.25x_Fusion_Mutation.csv,1.0,30,291
+Carnivorous Plant,(1x),1.0,Carnivorous Plant__1x.csv,1.0,30,291
+Carnivorous Plant,(2x) Gold/Foggy/Electrified/Scorched,2.0,Carnivorous Plant__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Carnivorous Plant,(3x) Diamond,3.0,Carnivorous Plant__3x_Diamond.csv,1.0,30,291
+Carnivorous Plant,(4x) Ruby/Frozen,4.0,Carnivorous Plant__4x_Ruby_Frozen.csv,1.0,30,291
+Carnivorous Plant,(5x) Neon,5.0,Carnivorous Plant__5x_Neon.csv,1.0,30,291
+Carnivorous Plant,3.15x Fusion Mutation,3.15,Carnivorous Plant__3.15x_Fusion_Mutation.csv,1.0,30,291
+Carnivorous Plant,4.25x Fusion Mutation,4.25,Carnivorous Plant__4.25x_Fusion_Mutation.csv,1.0,30,291
+Carnivorous Plant,5.25x Fusion Mutation,5.25,Carnivorous Plant__5.25x_Fusion_Mutation.csv,1.0,30,291
+Carnivorous Plant,6.25x Fusion Mutation,6.25,Carnivorous Plant__6.25x_Fusion_Mutation.csv,1.0,30,291
+Mr Carrot,,1.0,Mr Carrot__.csv,1.0,30,291
+Mr Carrot,Gold/Foggy/Electrified/Scorched,2.0,Mr Carrot__Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Mr Carrot,Diamond,3.0,Mr Carrot__Diamond.csv,1.0,30,291
+Mr Carrot,Ruby/Frozen,4.0,Mr Carrot__Ruby_Frozen.csv,1.0,30,291
+Mr Carrot,Neon,5.0,Mr Carrot__Neon.csv,1.0,30,291
+Mr Carrot,3.15x Fusion Mutation,3.15,Mr Carrot__3.15x_Fusion_Mutation.csv,1.0,30,291
+Mr Carrot,4.25x Fusion Mutation,4.25,Mr Carrot__4.25x_Fusion_Mutation.csv,1.0,30,291
+Mr Carrot,5.25x Fusion Mutation,5.25,Mr Carrot__5.25x_Fusion_Mutation.csv,1.0,30,291
+Mr Carrot,6.25x Fusion Mutation,6.25,Mr Carrot__6.25x_Fusion_Mutation.csv,1.0,30,291
+Tomatrio,(1x),1.0,Tomatrio__1x.csv,1.0,30,291
+Tomatrio,(2x) Gold/Foggy/Electrified/Scorched,2.0,Tomatrio__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Tomatrio,(3x) Diamond,3.0,Tomatrio__3x_Diamond.csv,1.0,30,291
+Tomatrio,(4x) Ruby/Frozen,4.0,Tomatrio__4x_Ruby_Frozen.csv,1.0,30,291
+Tomatrio,(5x) Neon,5.0,Tomatrio__5x_Neon.csv,1.0,30,291
+Tomatrio,3.15x Fusion Mutation,3.15,Tomatrio__3.15x_Fusion_Mutation.csv,1.0,30,291
+Tomatrio,4.25x Fusion Mutation,4.25,Tomatrio__4.25x_Fusion_Mutation.csv,1.0,30,291
+Tomatrio,5.25x Fusion Mutation,5.25,Tomatrio__5.25x_Fusion_Mutation.csv,1.0,30,291
+Tomatrio,6.25x Fusion Mutation,6.25,Tomatrio__6.25x_Fusion_Mutation.csv,1.0,30,291
+Shroombino,(1x),1.0,Shroombino__1x.csv,1.0,30,291
+Shroombino,(2x) Gold/Foggy/Electrified/Scorched,2.0,Shroombino__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Shroombino,(3x) Diamond,3.0,Shroombino__3x_Diamond.csv,1.0,30,291
+Shroombino,(4x) Ruby/Frozen,4.0,Shroombino__4x_Ruby_Frozen.csv,1.0,30,291
+Shroombino,(5x) Neon,5.0,Shroombino__5x_Neon.csv,1.0,30,291
+Shroombino,3.15x Fusion Mutation,3.15,Shroombino__3.15x_Fusion_Mutation.csv,1.0,30,291
+Shroombino,4.25x Fusion Mutation,4.25,Shroombino__4.25x_Fusion_Mutation.csv,1.0,30,291
+Shroombino,5.25x Fusion Mutation,5.25,Shroombino__5.25x_Fusion_Mutation.csv,1.0,30,291
+Shroombino,6.25x Fusion Mutation,6.25,Shroombino__6.25x_Fusion_Mutation.csv,1.0,30,291
+Mango,(1x),1.0,Mango__1x.csv,1.0,30,291
+Mango,(2x) Gold/Foggy/Electrified/Scorched,2.0,Mango__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Mango,(3x) Diamond,3.0,Mango__3x_Diamond.csv,1.0,30,291
+Mango,(4x) Ruby/Frozen,4.0,Mango__4x_Ruby_Frozen.csv,1.0,30,291
+Mango,(5x) Neon,5.0,Mango__5x_Neon.csv,1.0,30,291
+Mango,3.15x Fusion Mutation,3.15,Mango__3.15x_Fusion_Mutation.csv,1.0,30,291
+Mango,4.25x Fusion Mutation,4.25,Mango__4.25x_Fusion_Mutation.csv,1.0,30,291
+Mango,5.25x Fusion Mutation,5.25,Mango__5.25x_Fusion_Mutation.csv,1.0,30,291
+Mango,6.25x Fusion Mutation,6.25,Mango__6.25x_Fusion_Mutation.csv,1.0,30,291
+King Limone,(1x),1.0,King Limone__1x.csv,1.0,30,291
+King Limone,(2x) Gold/Foggy/Electrified/Scorched,2.0,King Limone__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+King Limone,(3x) Diamond,3.0,King Limone__3x_Diamond.csv,1.0,30,291
+King Limone,(4x) Ruby/Frozen,4.0,King Limone__4x_Ruby_Frozen.csv,1.0,30,291
+King Limone,(5x) Neon,5.0,King Limone__5x_Neon.csv,1.0,30,291
+King Limone,3.15x Fusion Mutation,3.15,King Limone__3.15x_Fusion_Mutation.csv,1.0,30,291
+King Limone,4.25x Fusion Mutation,4.25,King Limone__4.25x_Fusion_Mutation.csv,1.0,30,291
+King Limone,5.25x Fusion Mutation,5.25,King Limone__5.25x_Fusion_Mutation.csv,1.0,30,291
+King Limone,6.25x Fusion Mutation,6.25,King Limone__6.25x_Fusion_Mutation.csv,1.0,30,291
+Starfruit,(1x),1.0,Starfruit__1x.csv,1.0,30,291
+Starfruit,(2x) Gold/Foggy/Electrified/Scorched,2.0,Starfruit__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Starfruit,(3x) Diamond,3.0,Starfruit__3x_Diamond.csv,1.0,30,291
+Starfruit,(4x) Ruby/Frozen,4.0,Starfruit__4x_Ruby_Frozen.csv,1.0,30,291
+Starfruit,(5x) Neon,5.0,Starfruit__5x_Neon.csv,1.0,30,291
+Starfruit,3.15x Fusion Mutation,3.15,Starfruit__3.15x_Fusion_Mutation.csv,1.0,30,291
+Starfruit,4.25x Fusion Mutation,4.25,Starfruit__4.25x_Fusion_Mutation.csv,1.0,30,291
+Starfruit,5.25x Fusion Mutation,5.25,Starfruit__5.25x_Fusion_Mutation.csv,1.0,30,291
+Starfruit,6.25x Fusion Mutation,6.25,Starfruit__6.25x_Fusion_Mutation.csv,1.0,30,291
+Brussel Sprouts,(1x),1.0,Brussel Sprouts__1x.csv,1.0,30,291
+Brussel Sprouts,(2x) Gold/Foggy/Electrified/Scorched,2.0,Brussel Sprouts__2x_Gold_Foggy_Electrified_Scorched.csv,1.0,30,291
+Brussel Sprouts,(3x) Diamond,3.0,Brussel Sprouts__3x_Diamond.csv,1.0,30,291
+Brussel Sprouts,(4x) Ruby/Frozen,4.0,Brussel Sprouts__4x_Ruby_Frozen.csv,1.0,30,291
+Brussel Sprouts,(5x) Neon,5.0,Brussel Sprouts__5x_Neon.csv,1.0,30,291
+Brussel Sprouts,3.15x Fusion Mutation,3.15,Brussel Sprouts__3.15x_Fusion_Mutation.csv,1.0,30,291
+Brussel Sprouts,4.25x Fusion Mutation,4.25,Brussel Sprouts__4.25x_Fusion_Mutation.csv,1.0,30,291
+Brussel Sprouts,5.25x Fusion Mutation,5.25,Brussel Sprouts__5.25x_Fusion_Mutation.csv,1.0,30,291
+Brussel Sprouts,6.25x Fusion Mutation,6.25,Brussel Sprouts__6.25x_Fusion_Mutation.csv,1.0,30,291
