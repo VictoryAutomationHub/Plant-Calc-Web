@@ -1,11 +1,8 @@
-const DATA_DIR = "plants_damage_data";
-const INDEX_CSV = `${DATA_DIR}/index.csv`;
-
 const $ = (id) => document.getElementById(id);
+
 const statusEl = $("status");
 
 const els = {
-  // tabs
   tabs: document.querySelectorAll(".tab"),
   panels: { damage: $("tab-damage"), fuse: $("tab-fuse") },
 
@@ -30,22 +27,110 @@ const els = {
   outFuse: $("outFuse"),
 };
 
-const mutChoices = [
-  "Gold (2x)",
-  "Foggy (2x)",
-  "Electrified (2x)",
-  "Scorched (2x)",
-  "Diamond (3x)",
-  "Ruby (4x)",
-  "Frozen (4x)",
-  "Neon (5x)",
+// ============================================================
+// MUTATIONS + FUSION MATRIX (from your newest chart)
+// ============================================================
+
+// Base exists for damage lookup, but NOT allowed as a fuse input.
+const BASE_VARIANT = { name: "Base", label: "Base (1x)", mult: 1.0, group: "base" };
+
+// These are the selectable SINGLE mutations for fuse inputs.
+const MUTS_SINGLE = [
+  { name: "Corrupted",   label: "Corrupted (1x)",   mult: 1.0, group: "corrupted" },
+
+  { name: "Gold",        label: "Gold (2x)",        mult: 2.0, group: "any2" },
+  { name: "Foggy",       label: "Foggy (2x)",       mult: 2.0, group: "any2" },
+  { name: "Electrified", label: "Electrified (2x)", mult: 2.0, group: "any2" },
+  { name: "Scorched",    label: "Scorched (2x)",    mult: 2.0, group: "any2" },
+
+  { name: "Diamond",     label: "Diamond (3x)",     mult: 3.0, group: "diamond" },
+
+  { name: "Ruby",        label: "Ruby (4x)",        mult: 4.0, group: "ruby4" },
+  { name: "Frozen",      label: "Frozen (4x)",      mult: 4.0, group: "ruby4" },
+
+  { name: "Neon",        label: "Neon (5x)",        mult: 5.0, group: "neon" },
+
+  { name: "Wrapped",     label: "Wrapped (5.5x)",   mult: 5.5, group: "wrapped" },
 ];
 
-let plants = new Map();          // plantName -> [{label,mult,file}]
-let plantNames = [];
-let tableCache = new Map();      // filePath -> table Map(kgKey -> [10])
+// Group-based fusion results (order independent).
+// Key is sorted "a|b". Only combos shown in your chart are included.
+const FUSION_MATRIX = {
+  "any2|corrupted": 2.65,
+  "any2|any2":      3.15,
+  "any2|diamond":   4.40,
+  "any2|ruby4":     5.40,
+  "any2|neon":      6.40,
+  "any2|wrapped":   6.50,
 
-// ---------------- tabs ----------------
+  "corrupted|diamond": 3.15,
+  "corrupted|ruby4":   3.70,
+  "corrupted|neon":    4.20,
+
+  "diamond|ruby4":   5.50,
+  "diamond|neon":    6.50,
+  "diamond|wrapped": 6.75,
+
+  "ruby4|ruby4":     5.25,
+  "neon|ruby4":      6.65,
+  "ruby4|wrapped":   7.00,
+
+  "neon|wrapped":    7.50
+};
+
+function getFusionMult(groupA, groupB) {
+  const k = [groupA, groupB].sort().join("|");
+  return Object.prototype.hasOwnProperty.call(FUSION_MATRIX, k) ? FUSION_MATRIX[k] : null;
+}
+
+// Build Damage Lookup variants:
+// - Base
+// - All single mutations
+// - All allowed fused combos as NAMED entries (Gold + Wrapped, etc.)
+const DAMAGE_VARIANTS = buildDamageVariants();
+
+function buildDamageVariants() {
+  const out = [];
+
+  // base + singles
+  out.push({ label: BASE_VARIANT.label, mult: BASE_VARIANT.mult });
+  for (const m of MUTS_SINGLE) out.push({ label: m.label, mult: m.mult });
+
+  // named fusions from all unique pairs of single mutations
+  for (let i = 0; i < MUTS_SINGLE.length; i++) {
+    for (let j = i + 1; j < MUTS_SINGLE.length; j++) {
+      const a = MUTS_SINGLE[i], b = MUTS_SINGLE[j];
+
+      // can't fuse the exact same mutation
+      if (a.name === b.name) continue;
+
+      const mult = getFusionMult(a.group, b.group);
+      if (mult == null) continue;
+
+      out.push({
+        label: `${a.name} + ${b.name} (${formatNumber(mult)}x)`,
+        mult
+      });
+    }
+  }
+
+  // optional: sort by multiplier then name (makes it easier to browse)
+  out.sort((x, y) => {
+    if (x.mult !== y.mult) return x.mult - y.mult;
+    return x.label.localeCompare(y.label);
+  });
+
+  return out;
+}
+
+// ============================================================
+// APP STATE
+// ============================================================
+
+let plants = new Map();   // name -> {base, cd?}
+let plantNames = [];
+
+// tabs
 els.tabs.forEach(btn => {
   btn.addEventListener("click", () => {
     els.tabs.forEach(b => b.classList.remove("active"));
@@ -56,100 +141,66 @@ els.tabs.forEach(btn => {
   });
 });
 
-// ---------------- init ----------------
 init().catch(err => {
   console.error(err);
-  statusEl.textContent = "Error loading data. Check console.";
+  statusEl.textContent = "Error loading plant data. Check console.";
 });
 
-async function init(){
-  statusEl.textContent = "Loading index.csv…";
-  const idxText = await fetchText(INDEX_CSV);
-  loadIndex(idxText);
+async function init() {
+  statusEl.textContent = "Loading plants_base.json…";
 
-  // fill dropdowns
+  const data = await fetch("plants_base.json").then(r => {
+    if (!r.ok) throw new Error(`Failed to fetch plants_base.json (${r.status})`);
+    return r.json();
+  });
+
+  plants.clear();
+  plantNames = [];
+
+  for (const p of data.plants || []) {
+    if (!p?.name || !Number.isFinite(Number(p.base))) continue;
+    plants.set(p.name, {
+      base: Number(p.base),
+      cd: Number.isFinite(Number(p.cd)) ? Number(p.cd) : null
+    });
+    plantNames.push(p.name);
+  }
+
+  plantNames.sort((a, b) => a.localeCompare(b));
+
   fillSelect(els.plant, plantNames);
   fillSelect(els.fPlant, plantNames);
-  fillSelect(els.mutA, mutChoices);
-  fillSelect(els.mutB, mutChoices);
 
-  // default selections
+  // Damage lookup variants
+  fillVariants();
+
+  // Fuse inputs: only SINGLE mutations (no Base, no already-fused)
+  fillSelect(els.mutA, MUTS_SINGLE.map(m => m.label));
+  fillSelect(els.mutB, MUTS_SINGLE.map(m => m.label));
+
+  // defaults
   els.plant.selectedIndex = 0;
   els.fPlant.selectedIndex = 0;
+  els.variant.selectedIndex = 0;
   els.mutA.selectedIndex = 0;
-  els.mutB.selectedIndex = 2;
-
-  await refreshVariants();
+  els.mutB.selectedIndex = Math.min(2, els.mutB.options.length - 1);
 
   // events
-  els.plant.addEventListener("change", refreshVariants);
+  els.plant.addEventListener("change", () => { els.copyDamage.disabled = true; els.outDamage.value = ""; });
   els.variant.addEventListener("change", () => { els.copyDamage.disabled = true; els.outDamage.value = ""; });
   els.calcDamage.addEventListener("click", onCalcDamage);
   els.copyDamage.addEventListener("click", () => copyOut(els.outDamage, els.copyDamage));
 
-  els.fPlant.addEventListener("change", () => { els.outFuse.value = ""; els.copyFuse.disabled = true; });
+  els.fPlant.addEventListener("change", () => { els.copyFuse.disabled = true; els.outFuse.value = ""; });
   els.calcFuse.addEventListener("click", onCalcFuse);
   els.copyFuse.addEventListener("click", () => copyOut(els.outFuse, els.copyFuse));
 
   statusEl.textContent = `Loaded ${plantNames.length} plants ✅`;
 }
 
-// ---------------- CSV loading ----------------
-async function fetchText(url){
-  const r = await fetch(url);
-  if(!r.ok) throw new Error(`Failed to fetch ${url} (${r.status})`);
-  return await r.text();
-}
-
-function loadIndex(text){
-  plants = new Map();
-  plantNames = [];
-
-  const lines = text.split(/\r?\n/).map(l => l.replace(/^\uFEFF/, "").trim()).filter(Boolean);
-  for(const line of lines){
-    if(line.startsWith("plant,label,multiplier,file")) continue;
-
-    const fields = parseCSVLine(line);
-    if(fields.length < 4) continue;
-
-    const p = fields[0].trim();
-    const label = fields[1].trim();
-    const mult = fields[2].trim();      // string
-    const file = fields[3].trim();
-
-    if(!p || !file) continue;
-
-    if(!plants.has(p)){
-      plants.set(p, []);
-      plantNames.push(p);
-    }
-    plants.get(p).push({label, mult, file});
-  }
-}
-
-// Handles quoted CSV fields too (basic)
-function parseCSVLine(line){
-  const out = [];
-  let cur = "";
-  let inQ = false;
-  for(let i=0;i<line.length;i++){
-    const ch = line[i];
-    if(ch === '"' ){
-      if(inQ && line[i+1] === '"'){ cur += '"'; i++; }
-      else inQ = !inQ;
-    } else if(ch === ',' && !inQ){
-      out.push(cur); cur = "";
-    } else {
-      cur += ch;
-    }
-  }
-  out.push(cur);
-  return out;
-}
-
-function fillSelect(sel, items){
+function fillSelect(sel, items) {
   sel.innerHTML = "";
-  for(const it of items){
+  for (const it of items) {
     const opt = document.createElement("option");
     opt.value = it;
     opt.textContent = it;
@@ -157,279 +208,209 @@ function fillSelect(sel, items){
   }
 }
 
-// ---------------- damage tab ----------------
-async function refreshVariants(){
-  const plant = els.plant.value;
-  const vars = plants.get(plant) || [];
+function fillVariants() {
   els.variant.innerHTML = "";
-
-  for(const v of vars){
+  for (const v of DAMAGE_VARIANTS) {
     const opt = document.createElement("option");
-    opt.value = v.file;
-    opt.textContent = `${v.label}${v.mult ? `  [${v.mult}x]` : ""}`;
-    opt.dataset.mult = v.mult || "";
+    opt.value = String(v.mult);
+    opt.textContent = v.label;        // already includes name + multiplier for fused entries
+    opt.setAttribute("data-label", v.label);
     els.variant.appendChild(opt);
   }
-  els.variant.selectedIndex = 0;
-  els.outDamage.value = "";
-  els.copyDamage.disabled = true;
 }
 
-async function onCalcDamage(){
-  try{
-    const plant = els.plant.value;
-    const vars = plants.get(plant) || [];
-    const idx = els.variant.selectedIndex;
-    if(idx < 0 || idx >= vars.length) return showDamage("Pick a variant.");
+// ============================================================
+// DAMAGE TAB
+// ============================================================
 
-    const kg = numberOrNull(els.kg.value);
-    const lvl = numberOrNull(els.lvl.value);
-    if(kg === null) return showDamage("KG value isn't a number.");
-    if(lvl === null) return showDamage("Level isn't a number.");
-    if(lvl < 1 || lvl > 10) return showDamage("Level must be 1 to 10.");
+function onCalcDamage() {
+  const plantName = els.plant.value;
+  const plant = plants.get(plantName);
+  if (!plant) return showDamage("Unknown plant.");
 
-    const v = vars[idx];
-    const filePath = `${DATA_DIR}/${v.file}`;
-    const dmg = await lookupDamageByFile(filePath, kg, lvl);
+  const kgIn = numberOrNull(els.kg.value);
+  const lvlIn = numberOrNull(els.lvl.value);
 
-    const kgRounded = clampKg(kg);
+  if (kgIn === null) return showDamage("KG value isn't a number.");
+  if (lvlIn === null) return showDamage("Level isn't a number.");
 
-    const txt =
-`Plant:   ${plant}
-Variant: ${v.label}${v.mult ? `  [${v.mult}x]` : ""}
-KG:      ${formatKgKey(kgRounded)}
+  const lvl = clampInt(lvlIn, 1, 10);
+
+  const mult = Number(els.variant.value);
+  const label = els.variant.selectedOptions[0]?.getAttribute("data-label") || "Variant";
+
+  const kgRounded = roundKg(kgIn);
+  const kgUsed = clampKgForDamage(kgRounded);
+
+  const dmg = calcDamage(plant.base, kgUsed, mult, lvl);
+
+  let txt =
+`Plant:   ${plantName}
+Variant: ${label}
+KG:      ${kgRounded.toFixed(1)}${kgRounded > 30 ? "  (capped to 30.0 for damage)" : ""}
 Level:   ${lvl}
 --------------------------------
 Damage:  ${formatNumber(dmg)}`;
 
-    els.outDamage.value = txt;
-    els.copyDamage.disabled = false;
-
-  }catch(err){
-    console.error(err);
-    showDamage(`Error: ${err.message}`);
+  if (plant.cd && plant.cd > 0) {
+    const dps = dmg / plant.cd;
+    txt += `\nCD:      ${plant.cd}s\nDPS:     ${formatNumber(dps)}`;
   }
+
+  els.outDamage.value = txt;
+  els.copyDamage.disabled = false;
 }
 
-function showDamage(msg){
+function showDamage(msg) {
   els.outDamage.value = msg;
   els.copyDamage.disabled = true;
 }
 
-// ---------------- fuse tab ----------------
-async function onCalcFuse(){
-  try{
-    els.copyFuse.disabled = true;
-    els.outFuse.value = "";
+// ============================================================
+// FUSE TAB
+// ============================================================
 
-    const plant = els.fPlant.value;
+function onCalcFuse() {
+  els.copyFuse.disabled = true;
+  els.outFuse.value = "";
 
-    const kgA = numberOrNull(els.kgA.value);
-    const kgB = numberOrNull(els.kgB.value);
-    if(kgA === null || kgB === null) return showFuse("KG A / KG B must be numbers.");
+  const plantName = els.fPlant.value;
+  const plant = plants.get(plantName);
+  if (!plant) return showFuse("Unknown plant.");
 
-    const infoA = parseMutation(els.mutA.value);
-    const infoB = parseMutation(els.mutB.value);
+  const kgA = numberOrNull(els.kgA.value);
+  const kgB = numberOrNull(els.kgB.value);
+  if (kgA === null || kgB === null) return showFuse("KG A / KG B must be numbers.");
 
-    // can't fuse same mutation
-    if(infoA.name && infoA.name === infoB.name) return showFuse(`You can't fuse the same mutation with itself (${infoA.name} + ${infoB.name}).`);
+  const infoA = parseMutation(els.mutA.value);
+  const infoB = parseMutation(els.mutB.value);
 
-    const kgR = fuseResultKg(kgA, kgB);
+  if (!infoA.name || !infoB.name) return showFuse("Pick two valid mutations.");
 
-    const fuse = fuseResultMult(infoA, infoB);
-    if(!fuse) return showFuse("Unsupported fusion combo.");
-
-    let txt =
-`Plant A: ${plant} | ${formatKg(kgA)}kg | ${els.mutA.value}
-Plant B: ${plant} | ${formatKg(kgB)}kg | ${els.mutB.value}
---------------------------------
-Result KG:       ${formatKg(kgR)}kg
-Result Mutation: ${fuse.label}  [${fuse.mult}x]
-Rule used:       ${fuse.note}`;
-
-    if(kgR > 30.0) txt += `\nNote: Damage tables cap at 30kg, so lookup uses 30.0kg.`;
-
-    // optional damage lookup
-    let lvlR = numberOrNull(els.fLvl.value);
-    if(lvlR === null) lvlR = 1;
-    lvlR = clampInt(lvlR, 1, 10);
-
-    const dmg = await lookupDamageByMultiplier(plant, fuse.mult, kgR, lvlR);
-    txt += `\n--------------------------------
-Damage lookup (Result Plant: ${plant})
-Level: ${lvlR} | KG: ${formatKgKey(clampKg(kgR))} | Variant: ${fuse.label}
-Damage: ${formatNumber(dmg)}`;
-
-    els.outFuse.value = txt;
-    els.copyFuse.disabled = false;
-  }catch(err){
-    console.error(err);
-    showFuse(`Error: ${err.message}`);
+  // Can't fuse same mutation name
+  if (infoA.name === infoB.name) {
+    return showFuse(`You can't fuse the same mutation with itself (${infoA.name} + ${infoB.name}).`);
   }
+
+  // Result KG rule (your weight rules)
+  const kgR = fuseResultKg(kgA, kgB);
+
+  // Fusion result from matrix
+  const fuse = fuseResultMult(infoA, infoB);
+  if (!fuse) return showFuse("Unsupported fusion combo (not in the current matrix).");
+
+  let lvlR = numberOrNull(els.fLvl.value);
+  if (lvlR === null) lvlR = 1;
+  lvlR = clampInt(lvlR, 1, 10);
+
+  const kgUsed = clampKgForDamage(kgR);
+  const dmg = calcDamage(plant.base, kgUsed, fuse.mult, lvlR);
+
+  let txt =
+`Plant A: ${plantName} | ${formatKg(kgA)}kg | ${els.mutA.value}
+Plant B: ${plantName} | ${formatKg(kgB)}kg | ${els.mutB.value}
+--------------------------------
+Result KG:       ${kgR.toFixed(1)}kg${kgR > 30 ? "  (capped to 30.0 for damage)" : ""}
+Result Mutation: ${fuse.label}  [${formatNumber(fuse.mult)}x]
+Rule used:       ${fuse.note}
+--------------------------------
+Damage (Level ${lvlR}): ${formatNumber(dmg)}`;
+
+  if (plant.cd && plant.cd > 0) {
+    const dps = dmg / plant.cd;
+    txt += `\nCD: ${plant.cd}s | DPS: ${formatNumber(dps)}`;
+  }
+
+  els.outFuse.value = txt;
+  els.copyFuse.disabled = false;
 }
 
-function showFuse(msg){
+function showFuse(msg) {
   els.outFuse.value = msg;
   els.copyFuse.disabled = true;
 }
 
-function fuseResultKg(kgA, kgB){
+function fuseResultKg(kgA, kgB) {
+  // Your rule:
+  // avg = (kgA + kgB)/2
+  // ceil(avg)
+  // if avg is whole number -> add +1kg after ceil
   const avg = (kgA + kgB) / 2;
-  const ceil = Math.ceil(avg);
-  return isWhole(avg) ? (ceil + 1) : ceil;
+  const c = Math.ceil(avg);
+  const out = isWhole(avg) ? (c + 1) : c;
+  return roundKg(out);
 }
 
-function fuseResultMult(a, b){
-  // Neon overrides
-  if(a.class === "neon" || b.class === "neon"){
-    return { mult: 6.25, label: "Fusion 6.25x", note: "Neon + anything => 6.25x" };
-  }
-  // Ruby/Frozen (4x) rule
-  if(a.class === "ruby" || b.class === "ruby"){
-    return { mult: 5.25, label: "Fusion 5.25x", note: "Ruby/Frozen + any mutation => 5.25x" };
-  }
-  // 2x + 2x
-  if(a.class === "2x" && b.class === "2x"){
-    return { mult: 3.15, label: "Fusion 3.15x", note: "2x + 2x => 3.15x" };
-  }
-  // 2x + Diamond
-  if((a.class === "2x" && b.class === "diamond") || (b.class === "2x" && a.class === "diamond")){
-    return { mult: 4.25, label: "Fusion 4.25x", note: "2x + Diamond => 4.25x" };
-  }
-  return null;
+function fuseResultMult(a, b) {
+  const mult = getFusionMult(a.group, b.group);
+  if (mult == null) return null;
+
+  return {
+    mult,
+    label: `${a.name} + ${b.name}`,
+    note: `${a.group} + ${b.group} => ${formatNumber(mult)}x`
+  };
 }
 
-function parseMutation(text){
-  const s = text.trim();
-  if(s.includes("Gold")) return { name:"Gold", class:"2x", mult:2.0 };
-  if(s.includes("Foggy")) return { name:"Foggy", class:"2x", mult:2.0 };
-  if(s.includes("Electrified")) return { name:"Electrified", class:"2x", mult:2.0 };
-  if(s.includes("Scorched")) return { name:"Scorched", class:"2x", mult:2.0 };
-  if(s.includes("Diamond")) return { name:"Diamond", class:"diamond", mult:3.0 };
-  if(s.includes("Ruby")) return { name:"Ruby", class:"ruby", mult:4.0 };
-  if(s.includes("Frozen")) return { name:"Frozen", class:"ruby", mult:4.0 };
-  if(s.includes("Neon")) return { name:"Neon", class:"neon", mult:5.0 };
-  return { name:"", class:"unknown", mult:null };
+function parseMutation(labelText) {
+  const m = MUTS_SINGLE.find(x => x.label === labelText);
+  if (!m) return { name: "", group: "unknown", mult: null };
+  return { name: m.name, group: m.group, mult: m.mult };
 }
 
-// ---------------- lookup helpers ----------------
-function clampKg(kg){
-  let k = Math.round(kg * 10) / 10;
-  if(k < 1.0) k = 1.0;
-  if(k > 30.0) k = 30.0;
-  return k;
-}
-function formatKgKey(k){ return k.toFixed(1); }
-function isWhole(x){ return Math.abs(x - Math.round(x)) < 1e-9; }
+// ============================================================
+// MATH + FORMAT HELPERS
+// ============================================================
 
-function numberOrNull(v){
+function levelFactor(lvl) { return (lvl + 1) / 2; }
+function calcDamage(base, kg, mult, lvl) { return base * kg * mult * levelFactor(lvl); }
+
+function clampKgForDamage(kg) {
+  const k = roundKg(kg);
+  return Math.min(k, 30.0);
+}
+
+function roundKg(kg) {
+  return Math.round(Number(kg) * 10) / 10;
+}
+
+function isWhole(x) {
+  return Math.abs(x - Math.round(x)) < 1e-9;
+}
+
+function numberOrNull(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : null;
 }
-function clampInt(n, lo, hi){
+
+function clampInt(n, lo, hi) {
   n = Math.trunc(n);
-  if(n < lo) n = lo;
-  if(n > hi) n = hi;
+  if (n < lo) n = lo;
+  if (n > hi) n = hi;
   return n;
 }
-function formatKg(n){
-  if(Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
-  return stripZeros(n.toFixed(2));
-}
-function formatNumber(n){
-  if(Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+
+function formatKg(n) {
+  if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
   return stripZeros(Number(n).toFixed(2));
 }
-function stripZeros(s){
-  return s.replace(/0+$/,"").replace(/\.$/,"");
+
+function formatNumber(n) {
+  if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+  return stripZeros(Number(n).toFixed(2));
 }
 
-async function getTable(filePath){
-  if(tableCache.has(filePath)) return tableCache.get(filePath);
-
-  const text = await fetchText(filePath);
-  const table = loadVariantTable(text);
-  tableCache.set(filePath, table);
-  return table;
+function stripZeros(s) {
+  return s.replace(/0+$/, "").replace(/\.$/, "");
 }
 
-function loadVariantTable(text){
-  const table = new Map();
-  const lines = text.split(/\r?\n/).map(l => l.replace(/^\uFEFF/,"").trim());
+// ============================================================
+// COPY
+// ============================================================
 
-  let started = false;
-  for(const line of lines){
-    if(!line) continue;
-
-    if(!started){
-      if(line.startsWith("kg,")) started = true;
-      continue;
-    }
-
-    const fields = parseCSVLine(line);
-    if(fields.length < 11) continue;
-
-    const kgNum = Number(fields[0]);
-    if(!Number.isFinite(kgNum)) continue;
-
-    const kgKey = formatKgKey(Math.round(kgNum * 10) / 10);
-    const lvls = [];
-    for(let i=1;i<=10;i++){
-      const n = Number(fields[i]);
-      lvls.push(Number.isFinite(n) ? n : null);
-    }
-    table.set(kgKey, lvls);
-  }
-  return table;
-}
-
-async function lookupDamageByFile(filePath, kg, lvl){
-  const t = await getTable(filePath);
-  if(t.size === 0) throw new Error(`Couldn't load data table: ${filePath}`);
-
-  const kgKey = formatKgKey(clampKg(kg));
-  let row = t.get(kgKey);
-
-  if(!row){
-    // fallback: nearest kg key
-    let bestKey = null;
-    let bestDist = Infinity;
-    const target = Number(kgKey);
-    for(const k of t.keys()){
-      const kn = Number(k);
-      const d = Math.abs(kn - target);
-      if(d < bestDist){ bestDist = d; bestKey = k; }
-    }
-    if(!bestKey) throw new Error("No KG data found in table.");
-    row = t.get(bestKey);
-  }
-
-  const val = row[lvl - 1];
-  if(val == null || val === 0) throw new Error(`No damage value found at KG ${kgKey}, level ${lvl}.`);
-  return val;
-}
-
-async function lookupDamageByMultiplier(plantName, multNum, kg, lvl){
-  const vars = plants.get(plantName) || [];
-  const target = Math.round(multNum * 100) / 100;
-
-  let match = null;
-  for(const v of vars){
-    const mv = Number(v.mult);
-    if(Number.isFinite(mv) && (Math.round(mv * 100) / 100) === target){
-      match = v;
-      break;
-    }
-  }
-  if(!match) throw new Error(`No variant table found for ${target}x for plant ${plantName}`);
-
-  return await lookupDamageByFile(`${DATA_DIR}/${match.file}`, kg, lvl);
-}
-
-// ---------------- copy ----------------
-async function copyOut(textarea, btn){
+async function copyOut(textarea, btn) {
   const txt = textarea.value.trim();
-  if(!txt) return;
+  if (!txt) return;
   await navigator.clipboard.writeText(txt);
   const old = btn.textContent;
   btn.textContent = "Copied ✅";
